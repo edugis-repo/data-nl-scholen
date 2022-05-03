@@ -54,3 +54,11 @@ export PGPASSWORD=mydbpassword
 psql -h localhost -U postgres mydbname < geocode.sql
 ```
 
+## export to geojson
+```bash
+ogr2ogr -f "GeoJSON" scholen.geo.json PG:"host=YOUR_HOST dbname=YOUR_DB user=YOUR_USER password=YOUR_PASS port=5432" "scholen(locatie)"
+```
+
+## view the result
+drag resulting file 'scholen.geo.json' to for example [the Dutch EduGIS map](https://kaart.edugis.nl/v2/#configurl=maps/layers.json)   
+![schools on a map](edugisschools.png)

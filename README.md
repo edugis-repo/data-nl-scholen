@@ -6,7 +6,7 @@ Conversion and geocoding of dutch school locations (elementary and secondary edu
 * postgis
 * ogr2ogr
 * iconv
-* (Recent) BAG data
+* (Recent) BAG data (table 'bagadres')
 
 ## Steps
 1. download address data (CSV)
@@ -59,8 +59,12 @@ psql < geocode.sql
 
 ## export to geojson
 ```bash
-ogr2ogr -f "GeoJSON" scholen.geo.json PG:"host=YOUR_HOST dbname=YOUR_DB user=YOUR_USER password=YOUR_PASS port=5432" "scholen(locatie)"
+ogr2ogr -f "GeoJSON" scholen.geo.json PG:"host=YOUR_HOST dbname=YOUR_DB user=YOUR_USER password=YOUR_PASS port=5432" "scholen"
 ```
+
+## todo
+toevoegen leerlingen voortgezet onderwijs: https://duo.nl/open_onderwijsdata/voortgezet-onderwijs/aantal-leerlingen/aantal-leerlingen.jsp
+toevoegen leerlingen basisonderwijs: https://duo.nl/open_onderwijsdata/primair-onderwijs/aantal-leerlingen/
 
 ## view the result
 drag resulting file 'scholen.geo.json' to for example [the Dutch EduGIS map](https://kaart.edugis.nl/v2/#configurl=maps/layers.json)   

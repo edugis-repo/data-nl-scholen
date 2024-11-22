@@ -36,7 +36,7 @@ insert into scholen
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-	  from "02_alle_schoolvestigingen_basisonderwijs_utf8" s join bag20230217.bagadres a 
+	  from "02_alle_schoolvestigingen_basisonderwijs_utf8" s join bag20241122.bagadres a 
 	    on (replace(s.postcode, ' ', '')=a.postcode and to_number(s.huisnummer_toevoeging,'99999')=a.huisnummer)
 	     where s.huisnummer_toevoeging not like '%-%' and a.huisletter is null and a.huisnummertoevoeging is null;
 
@@ -58,7 +58,7 @@ insert into scholen
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-	  from "02_alle_schoolvestigingen_basisonderwijs_utf8" s join bag20230217.bagadres a 
+	  from "02_alle_schoolvestigingen_basisonderwijs_utf8" s join bag20241122.bagadres a 
 	    on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisletter)
 	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.huisnummertoevoeging is null;
 
@@ -80,7 +80,7 @@ insert into scholen
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-	  from "02_alle_schoolvestigingen_basisonderwijs_utf8" s join bag20230217.bagadres a 
+	  from "02_alle_schoolvestigingen_basisonderwijs_utf8" s join bag20241122.bagadres a 
 	    on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisnummertoevoeging)
 	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is null and a.huisnummertoevoeging is not null;
 
@@ -106,7 +106,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and replace(s.straatnaam, ' ', '') || s.huisnummer_toevoeging ilike replace(a.openbareruimtenaam, ' ', '') || a.huisnummer::text || '-' || a.huisletter)
 		      where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.geopunt is not null;
@@ -134,7 +134,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and to_number(regexp_replace(s.huisnummer_toevoeging, '([0-9]*)-([0-9]*)', '\1'),'9999') = a.huisnummer)
 		      where a.huisletter is null and a.huisnummertoevoeging is null and a.geopunt is not null;
@@ -161,7 +161,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (
               replace(s.postcode, ' ', '')=a.postcode 
 		      and to_number(regexp_replace(s.huisnummer_toevoeging, '([0-9]*)-([0-9]*)', '\2'),'9999') = a.huisnummer
@@ -195,7 +195,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and a.gebruiksdoel = 'onderwijsfunctie') and to_number(s.huisnummer_toevoeging, '99999')=a.huisnummer
 		      where s.huisnummer_toevoeging not like '%-%' and a.geopunt is not null;
@@ -223,7 +223,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and a.gebruiksdoel like '%onderwijsfunctie%')
 		      where a.geopunt is not null;
@@ -252,7 +252,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
             ) and to_number(s.huisnummer_toevoeging, '99999')=a.huisnummer
 		      where s.huisnummer_toevoeging not like '%-%' and a.geopunt is not null;
@@ -281,7 +281,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (left(s.postcode,4)=left(a.postcode,4) 
              and s.straatnaam = a.openbareruimtenaam) 
 				where a.gebruiksdoel like '%onderwijsfunctie%'
@@ -311,7 +311,7 @@ insert into scholen
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-	  from "02_alle_vestigingen_vo_utf8" s join bag20230217.bagadres a 
+	  from "02_alle_vestigingen_vo_utf8" s join bag20241122.bagadres a 
 	    on (replace(s.postcode, ' ', '')=a.postcode and to_number(s.huisnummer_toevoeging,'99999')=a.huisnummer)
 	     where s.huisnummer_toevoeging not like '%-%' and a.huisletter is null and a.huisnummertoevoeging is null;
 
@@ -333,7 +333,7 @@ insert into scholen
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-	  from "02_alle_vestigingen_vo_utf8" s join bag20230217.bagadres a 
+	  from "02_alle_vestigingen_vo_utf8" s join bag20241122.bagadres a 
 	    on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisletter)
 	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.huisnummertoevoeging is null;
 
@@ -355,7 +355,7 @@ insert into scholen
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-	  from "02_alle_vestigingen_vo_utf8" s join bag20230217.bagadres a 
+	  from "02_alle_vestigingen_vo_utf8" s join bag20241122.bagadres a 
 	    on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisnummertoevoeging)
 	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is null and a.huisnummertoevoeging is not null;
 
@@ -381,7 +381,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and replace(s.straatnaam, ' ', '') || s.huisnummer_toevoeging ilike replace(a.openbareruimtenaam, ' ', '') || a.huisnummer::text || '-' || a.huisletter)
 		      where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.geopunt is not null;
@@ -409,7 +409,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and to_number(regexp_replace(s.huisnummer_toevoeging, '([0-9]*)-([0-9]*)', '\1'),'9999') = a.huisnummer)
 		      where a.huisletter is null and a.huisnummertoevoeging is null and a.geopunt is not null;
@@ -436,7 +436,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (
               replace(s.postcode, ' ', '')=a.postcode 
 		      and to_number(regexp_replace(s.huisnummer_toevoeging, '([0-9]*)-([0-9]*)', '\2'),'9999') = a.huisnummer
@@ -470,7 +470,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and a.gebruiksdoel = 'onderwijsfunctie') and to_number(s.huisnummer_toevoeging, '99999')=a.huisnummer
 		      where s.huisnummer_toevoeging not like '%-%' and a.geopunt is not null;
@@ -498,7 +498,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
 		    and a.gebruiksdoel like '%onderwijsfunctie%')
 		      where a.geopunt is not null;
@@ -528,7 +528,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (replace(s.postcode, ' ', '')=a.postcode 
             ) and to_number(s.huisnummer_toevoeging, '99999')=a.huisnummer
 		      where s.huisnummer_toevoeging not like '%-%' and a.geopunt is not null;
@@ -557,7 +557,7 @@ with ungeocodedvestigingen as
 	s.vestigingscode,
 	s."onderwijsgebied_naam" onderwijsgebied,
 	st_transform(a.geopunt,4326) locatie
-		from ungeocodedvestigingen s left join bag20230217.bagadres a
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
 		  on (left(s.postcode,4)=left(a.postcode,4) 
              and s.straatnaam = a.openbareruimtenaam) 
 				where a.gebruiksdoel like '%onderwijsfunctie%'

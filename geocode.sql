@@ -18,7 +18,9 @@ create table scholen (
 	locatie geometry(point,4326)
 );
 
--- zonder huisnummer toevoegingen
+--- BASISONDERWIJS
+
+-- basisonderwijs zonder huisnummer toevoegingen
 insert into scholen
    select s.vestigingsnaam naam,
 	'basisschool' "type",
@@ -40,7 +42,7 @@ insert into scholen
 	    on (replace(s.postcode, ' ', '')=a.postcode and to_number(s.huisnummer_toevoeging,'99999')=a.huisnummer)
 	     where s.huisnummer_toevoeging not like '%-%' and a.huisletter is null and a.huisnummertoevoeging is null;
 
--- met huisletter
+-- basisonderwijs met huisletter
 insert into scholen
    select s.vestigingsnaam naam,
 	'basisschool' "type",
@@ -62,7 +64,7 @@ insert into scholen
 	    on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisletter)
 	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.huisnummertoevoeging is null;
 
--- met huisnummertoevoeging
+-- basisonderwijs met huisnummertoevoeging
 insert into scholen
    select s.vestigingsnaam naam,
 	'basisschool' "type",
@@ -84,7 +86,7 @@ insert into scholen
 	    on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisnummertoevoeging)
 	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is null and a.huisnummertoevoeging is not null;
 
--- solve where straat numbers and housenumbers got mixed up
+-- basisonderwijs: solve where straat numbers and housenumbers got mixed up
 with ungeocodedvestigingen as
  (select a1.* 
   from "02_alle_schoolvestigingen_basisonderwijs_utf8" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
@@ -112,7 +114,7 @@ with ungeocodedvestigingen as
 		      where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.geopunt is not null;
 
 
--- map house number ranges to first house number		     
+-- basisonderwijs: map house number ranges to first house number	     
 with ungeocodedvestigingen as
  (select a1.* 
   from "02_alle_schoolvestigingen_basisonderwijs_utf8" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
@@ -139,7 +141,7 @@ with ungeocodedvestigingen as
 		    and to_number(regexp_replace(s.huisnummer_toevoeging, '([0-9]*)-([0-9]*)', '\1'),'9999') = a.huisnummer)
 		      where a.huisletter is null and a.huisnummertoevoeging is null and a.geopunt is not null;
 
--- map house number ranges to last house number		     
+-- basisonderwijs: map house number ranges to last house number		     
 with ungeocodedvestigingen as
  (select a1.* 
   from "02_alle_schoolvestigingen_basisonderwijs_utf8" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
@@ -173,7 +175,7 @@ with ungeocodedvestigingen as
 
 
 
--- map housenumbers without extension to housennumbers with extension using onderwijsfunctie
+-- basisonderwijs: map housenumbers without extension to housennumbers with extension using onderwijsfunctie
 with ungeocodedvestigingen as
  (select a1.* 
   from "02_alle_schoolvestigingen_basisonderwijs_utf8" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
@@ -200,7 +202,7 @@ with ungeocodedvestigingen as
 		    and a.gebruiksdoel = 'onderwijsfunctie') and to_number(s.huisnummer_toevoeging, '99999')=a.huisnummer
 		      where s.huisnummer_toevoeging not like '%-%' and a.geopunt is not null;
 
--- map to onderwijsfunctie in same postcode		     
+-- basisonderwijs: map to onderwijsfunctie in same postcode		     
 with ungeocodedvestigingen as
  (select a1.* 
   from "02_alle_schoolvestigingen_basisonderwijs_utf8" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
@@ -228,7 +230,7 @@ with ungeocodedvestigingen as
 		    and a.gebruiksdoel like '%onderwijsfunctie%')
 		      where a.geopunt is not null;
 
--- map housenumbers without extension to housennumbers with extension ignoring onderwijsfunctie
+-- basisonderwijs: map housenumbers without extension to house numbers with extension ignoring onderwijsfunctie
 with ungeocodedvestigingen as
  (select a1.* 
   from "02_alle_schoolvestigingen_basisonderwijs_utf8" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
@@ -562,3 +564,269 @@ with ungeocodedvestigingen as
              and s.straatnaam = a.openbareruimtenaam) 
 				where a.gebruiksdoel like '%onderwijsfunctie%'
 				and a.geopunt is not null;
+
+-- SPECIAAL ONDERWIJS
+-- speciaal onderwijs zonder huisnummer toevoegingen
+insert into scholen
+   select s.vestigingsnaam naam,
+	soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+	  from "09_alle_vestigingen_sbo_so_en_vs" s join bag20241122.bagadres a 
+	    on (replace(s.postcode, ' ', '')=a.postcode and to_number(s.huisnummer_toevoeging,'99999')=a.huisnummer)
+	     where s.huisnummer_toevoeging not like '%-%' and a.huisletter is null and a.huisnummertoevoeging is null;
+
+
+-- met huisletter
+insert into scholen
+   select s.vestigingsnaam naam,
+	soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+	  from "09_alle_vestigingen_sbo_so_en_vs" s join bag20241122.bagadres a
+      on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisletter)
+	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.huisnummertoevoeging is null;
+
+-- met huisnummertoevoeging
+insert into scholen
+   select s.vestigingsnaam naam,
+	soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+	  from "09_alle_vestigingen_sbo_so_en_vs" s join bag20241122.bagadres a
+      on (replace(s.postcode, ' ', '')=a.postcode and s.huisnummer_toevoeging ilike a.huisnummer::text || '-' || a.huisnummertoevoeging)
+	     where s.huisnummer_toevoeging like '%-%' and a.huisletter is null and a.huisnummertoevoeging is not null;
+
+-- speciaal onderwijs: solve where straat numbers and housenumbers got mixed up
+with ungeocodedvestigingen as
+ (select a1.* 
+  from "09_alle_vestigingen_sbo_so_en_vs" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
+    where s1.vestigingscode is null)
+ insert into scholen
+ select s.vestigingsnaam naam,
+  soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
+		  on (replace(s.postcode, ' ', '')=a.postcode 
+		    and replace(s.straatnaam, ' ', '') || s.huisnummer_toevoeging ilike replace(a.openbareruimtenaam, ' ', '') || a.huisnummer::text || '-' || a.huisletter)
+		      where s.huisnummer_toevoeging like '%-%' and a.huisletter is not null and a.geopunt is not null;
+
+
+-- speciaal wijs: map house number ranges to first house number
+with ungeocodedvestigingen as
+ (select a1.* 
+  from "09_alle_vestigingen_sbo_so_en_vs" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
+    where s1.vestigingscode is null)
+ insert into scholen
+ select s.vestigingsnaam naam,
+  soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
+		  on (replace(s.postcode, ' ', '')=a.postcode 
+		    and to_number(regexp_replace(s.huisnummer_toevoeging, '([0-9]*)-([0-9]*)', '\1'),'9999') = a.huisnummer)
+		      where a.huisletter is null and a.huisnummertoevoeging is null and a.geopunt is not null;
+
+-- speciaal onderwijs: map house number ranges to first house number
+with ungeocodedvestigingen as
+ (select a1.* 
+  from "09_alle_vestigingen_sbo_so_en_vs" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
+    where s1.vestigingscode is null)
+ insert into scholen
+ select s.vestigingsnaam naam,
+  soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
+			on ( replace(s.postcode, ' ', '')=a.postcode and to_number(regexp_replace(s.huisnummer_toevoeging, '([0-9]*)-([0-9]*)', '\2'),'9999') = a.huisnummer)
+				where (regexp_match(s.huisnummer_toevoeging,'([0-9]*)-([0-9]*)'))[2] !='' 
+					and a.huisletter is null 
+					and a.huisnummertoevoeging is null 
+					and a.geopunt is not null;
+
+-- speciaal onderwijs: map housenumbers without extension to housennumbers with extension using onderwijsfunctie
+with ungeocodedvestigingen as
+ (select a1.* 
+  from "09_alle_vestigingen_sbo_so_en_vs" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
+    where s1.vestigingscode is null)
+ insert into scholen
+ select s.vestigingsnaam naam,
+  soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
+			on (replace(s.postcode, ' ', '')=a.postcode 
+		    and a.gebruiksdoel = 'onderwijsfunctie') and to_number(s.huisnummer_toevoeging, '99999')=a.huisnummer
+		      where s.huisnummer_toevoeging not like '%-%' and a.geopunt is not null;
+
+
+-- speciaal onderwijs: map on same postcode using onderwijsfunctie
+with ungeocodedvestigingen as
+ (select a1.* 
+  from "09_alle_vestigingen_sbo_so_en_vs" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
+    where s1.vestigingscode is null)
+ insert into scholen
+ select s.vestigingsnaam naam,
+  soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
+			on (replace(s.postcode, ' ', '')=a.postcode 
+		    and a.gebruiksdoel like '%onderwijsfunctie%')
+		      where a.geopunt is not null;
+
+
+-- speciaal onderwijs: map housenumbers without extension to house numbers with extension ignoring onderwijsfunctie
+with ungeocodedvestigingen as
+ (select a1.* 
+  from "09_alle_vestigingen_sbo_so_en_vs" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
+    where s1.vestigingscode is null)
+ insert into scholen
+ select s.vestigingsnaam naam,
+  soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
+			on (replace(s.postcode, ' ', '')=a.postcode 
+            ) and to_number(s.huisnummer_toevoeging, '99999')=a.huisnummer
+		      where s.huisnummer_toevoeging not like '%-%' and a.geopunt is not null;
+
+
+-- speciaal onderwijs: map on same street in same town using onderwijsfunctie
+with ungeocodedvestigingen as
+ (select a1.* 
+  from "09_alle_vestigingen_sbo_so_en_vs" a1 left join scholen s1 on (a1.vestigingscode=s1.vestigingscode) 
+    where s1.vestigingscode is null)
+ insert into scholen
+ select s.vestigingsnaam naam,
+  soort_primair_onderwijs "type",
+	s.denominatie,
+	s.internetadres,
+	s.straatnaam straat,
+	a.huisnummer,
+	a.huisletter,
+	a.huisnummertoevoeging,
+	replace(s.postcode, ' ', '') postcode,
+	a.woonplaatsnaam plaats,
+	s.gemeentenaam gemeente,
+	s.provincie,
+	s."instellingcode" brin_nummer,
+	s.vestigingscode,
+	s."onderwijsgebied_naam" onderwijsgebied,
+	st_transform(a.geopunt,4326) locatie
+		from ungeocodedvestigingen s left join bag20241122.bagadres a
+			on (left(s.postcode,4)=left(a.postcode,4) 
+             and s.straatnaam = a.openbareruimtenaam) 
+				where a.gebruiksdoel like '%onderwijsfunctie%'
+				and a.geopunt is not null;
+
+

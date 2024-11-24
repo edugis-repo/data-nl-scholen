@@ -25,7 +25,9 @@ URLS (updated 2024-11-22):
 [02-alle-vestigingen-vo.csv](https://www.duo.nl/open_onderwijsdata/images/02.-alle-vestigingen-vo.csv) (voortgezet onderwijs)
 [01-adressen-instellingen.csv](https://www.duo.nl/open_onderwijsdata/images/01.-adressen-mbo-instellingen.csv) (mbo)  
 [01-instellingen-hbo-en-wo.csv](https://www.duo.nl/open_onderwijsdata/images/01.-instellingen-hbo-en-wo.csv) (hogescholen en universiteiten)
-[02-instellingen-pabo.csv](https://www.duo.nl/open_onderwijsdata/images/02-instellingen-pabo.csv) (pabo)   
+[02-instellingen-pabo.csv](https://www.duo.nl/open_onderwijsdata/images/02-instellingen-pabo.csv) (pabo) 
+[09.-alle-vestigingen-sbo-so-en-vso.csv](https://duo.nl/open_onderwijsdata/images/09.-alle-vestigingen-sbo-so-en-vso.csv) (speciaal en voorgezet speciaal onderwijs)
+[01.-leerlingen-po-soort-po-cluster-leeftijd-2023-2024.csv](https://duo.nl/open_onderwijsdata/images/01.-leerlingen-po-soort-po-cluster-leeftijd-2023-2024.csv)
 
 The above csv files are ANSI-encoded (alias windows-1252).
 
@@ -37,6 +39,7 @@ iconv -f "windows-1252" -t "UTF-8" 02.-alle-vestigingen-vo.csv -o data/02-alle-v
 iconv -f "windows-1252" -t "UTF-8" 01.-adressen-mbo-instellingen.csv -o data/01-adressen-instellingen-utf8.csv
 iconv -f "windows-1252" -t "UTF-8" 01.-instellingen-hbo-en-wo.csv -o data/01-instellingen-hbo-en-wo-utf8.csv
 iconv -f "windows-1252" -t "UTF-8" 02-instellingen-pabo.csv -o data/02-instellingen-pabo-utf8.csv
+iconv -f "windows-1252" -t "UTF-8" 09.-alle-vestigingen-sbo-so-en-vso.csv -o data/09-alle-vestigingen-sbo-so-en-vso-utf8.csv
 ```
 
 ## import into Postgresql

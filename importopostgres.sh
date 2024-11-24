@@ -195,3 +195,43 @@ psql -c "CREATE TABLE \"02_instellingen_pabo_utf8\" (
     rmc_regio_naam TEXT
 );"
 psql -c "\copy \"02_instellingen_pabo_utf8\" FROM 'data/02-instellingen-pabo-utf8.csv' DELIMITER ';' CSV HEADER;"
+
+psql -c "DROP TABLE IF EXISTS \"09_alle_vestigingen_sbo_so_en_vs\";"
+psql -c "CREATE TABLE \"09_alle_vestigingen_sbo_so_en_vs\" (
+    soort_primair_onderwijs TEXT,
+    provincie TEXT,
+    bevoegd_gezag_nummer INT,
+    instellingcode TEXT,
+    vestigingscode TEXT,
+    vestigingsnaam TEXT,
+    straatnaam TEXT,
+    huisnummer_toevoeging TEXT,
+    postcode TEXT,
+    plaatsnaam TEXT,
+    gemeentecode INT,
+    gemeentenaam TEXT,
+    denominatie TEXT,
+    telefoonnummer TEXT,
+    internetadres TEXT,
+    cluster TEXT,
+    onderwijs TEXT,
+    straatnaam_correspondentieadres TEXT,
+    huisnummer_toevoeging_correspondentieadres TEXT,
+    postcode_correspondentieadres TEXT,
+    plaatsnaam_correspondentieadres TEXT,
+    nodaal_gebied_code INT,
+    nodaal_gebied_naam TEXT,
+    rpa_gebied_code INT,
+    rpa_gebied_naam TEXT,
+    wgr_gebied_code INT,
+    wgr_gebied_naam TEXT,
+    coropgebied_code INT,
+    coropgebied_naam TEXT,
+    onderwijsgebied_code INT,
+    onderwijsgebied_naam TEXT,
+    rmc_regio_code INT,
+    rmc_regio_naam TEXT,
+    vakantieregio TEXT
+);"
+psql -c "\copy \"09_alle_vestigingen_sbo_so_en_vs\" FROM 'data/09-alle-vestigingen-sbo-so-en-vso-utf8.csv' DELIMITER ';' CSV HEADER;"
+

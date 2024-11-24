@@ -1,0 +1,37 @@
+{"style": {
+    "id": "e7478cbf-83b8-4a64-9e47-c56e2b4df768",
+    "type": "circle",
+    "source": {
+      "type": "geojson"
+    },
+    "metadata": {
+      "title": "scholen.geo point"
+    },
+    "paint": {
+      "circle-color": ["match", ["get", "type"],
+	"basisschool", "red",
+	"SBAO", "green",
+	"SO", "green",
+	"VSO", "green",
+	"(V)SO", "green",
+	"BRUGJAAR", "yellow",
+	"HAVO", "yellow",
+	"HAVO/VWO", "yellow",
+	"VWO", "yellow",
+	"VBO", "yellow",
+	"PRO", "yellow",
+	"VBO/PRO", "yellow",
+	"MAVO", "yellow",
+	"VBO/MAVO", "yellow",
+	"VBO/MAVO/HAVO", "yellow",
+	"VBO/MAVO/HAVO/VWO", "yellow",
+	"MAVO/HAVO/VWO", "yellow",
+	"VBO/MAVO/HAVO/VWO/PRO", "yellow",
+	"black"
+      ],
+      "circle-radius": 10,
+      "circle-stroke-width": 1,
+      "circle-stroke-color": "#FFF"
+    }
+  }
+}
